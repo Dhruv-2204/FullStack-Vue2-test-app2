@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script> 
+    <title>Pet Store</title>
+</head>
+<body>
+    <div id="webstore">
+        <div v-show="showProduct" style="text-align: center;">
+            <h2 v-if="showProduct">Product Details
+                <p></p>
+            </h2>
+            <h2 v-else>Checkout Page</h2>
+        </div>
+        <div @click ="showCheckout" id="checkout" style="position: absolute; top: 10px; right: 10px;">
+            <button>Checkout ({{cartItemCount}})
+                <img :src="checkoutImage" alt="Shopping Cart" style="width: 20px; height: 20px; vertical-align: middle;">
+            </button>
+        </div>
+       
+        
+        <main>
+        <div v-if="showProduct" style="text-align: center;">
+        <figure>
+          <img v-bind:src="product.image" alt="Cat Image">
+          <h2 v-text="product.title" ></h2>
+          <p v-text="product.id"> </p>
+          <p v-text="product.description"></p>
+          <p>Price: {{product.price}} </p>
+          <p v-if="product.inventory > 0">In Stock</p>
+
+          <br>
+          <button v-on:click="addToCart">Add to cart</button>
+          </figure>
+          </div>
+          <div v-else>
+            <figure>
+                <h2>Checkout Page</h2>
+                <p>Total Items in Cart: {{cartItemCount}}</p>
+                <p v-text="message"></p>
+
+                <ul>
+                    <li v-for="item in cart" :key="item.id">
+                        {{item.title}} - {{item.price}}
+                    </li>
+                </ul>
+          </div>
+
+
+        </figure>
+       </main>
+       </div>
+    </div>
+<script>
+    let webstore = new Vue({
+        el: '#webstore',
+        data:{
+            message: 'Welcome to my Pet Store !!!!',
+            product:{
+                id: 1001,
+                title:'Cat Food 25 lb bag',
+                description:'Irresistible cat food for your cat',
+                price:2000,
+                image:'product-fullsize.png',
+                inventory: 5
+            },
+            cart: [],
+            checkoutImage:'shopping-cart.png',
+            showProduct: true
+        },
+        methods:{
+            addToCart(){
+                if(this.product.inventory <= 0){
+                    alert('Sorry, this product is out of stock!');
+                } else{
+                    this.cart.push(this.product);
+                    this.product.inventory--;
+                }
+                
+            },
+            checkoutBtnClicked(){
+                alert('Checkout button clicked!');
+                // show only check out and hide bg]
+                this.showProduct = false;
+
+            },
+            showCheckout(){
+                this.showProduct = this.showProduct ? false : true;
+            }
+        },
+        computed:{
+            cartItemCount(){
+                return this.cart.length || 0;
+            }
+        }
+    });
+</script> 
+</body>
+</html>
